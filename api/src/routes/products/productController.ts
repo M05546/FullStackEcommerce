@@ -34,9 +34,8 @@ export async function getProductById (req: Request, res: Response) {
 
 export async function createProduct (req: Request, res: Response) {
     try {
-        console.log(req.cleanBody);
-        const data = _.pick(req.body, Object.keys(createProductSchema.shape));
-
+        // console.log(req.cleanBody);
+        // const data = _.pick(req.body, Object.keys(createProductSchema.shape));
         const [product] = await db
         .insert(productsTable)
         .values(req.cleanBody)            // WILL BE ADDING VALIDATION HERE

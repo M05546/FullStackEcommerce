@@ -8,6 +8,13 @@
       "when": 1742431768679,
       "tag": "0000_heavy_jigsaw",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1742698103052,
+      "tag": "0001_lowly_crystal",
+      "breakpoints": true
     }
   ]
 }
