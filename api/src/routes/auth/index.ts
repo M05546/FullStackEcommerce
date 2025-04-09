@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { createUserSchema, loginSchema, usersTable } from '../../db/usersSchema.js';
-import { validateData } from '../../middlewares/validationMiddleware.js';
+import { createUserSchema, loginSchema, usersTable } from '../../db/usersSchema';
+import { validateData } from '../../middlewares/validationMiddleware';
 import bcrypt from 'bcryptjs';
-import { db } from '../../db/index.js';
+import { db } from '../../db/index';
 import { eq } from 'drizzle-orm';
-//import { remove } from 'lodash';
+
 import jwt from 'jsonwebtoken';
 
 const router = Router();
@@ -21,6 +21,7 @@ router.post('/register', validateData(createUserSchema), async (req, res) => {
         res.status(201).json({ user });
     } catch (e) {
         res.status(500).send('Something went wrong');
+        
     }
 });
 

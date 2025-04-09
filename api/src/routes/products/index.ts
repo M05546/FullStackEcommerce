@@ -4,14 +4,14 @@ import { listProducts,
     createProduct,
     updateProduct,
     deleteProduct
-} from './productController.js';
-import { validateData } from '../../middlewares/validationMiddleware.js';
+} from './productController';
+import { validateData } from '../../middlewares/validationMiddleware';
 
 import { 
     createProductSchema,
     updateProductSchema,
-} from '../../db/productsSchema.js';
-import { verifySeller, verifyToken } from '../../middlewares/authMiddleware.js';
+} from '../../db/productsSchema';
+import { verifySeller, verifyToken } from '../../middlewares/authMiddleware';
 
 
 

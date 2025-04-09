@@ -8,7 +8,7 @@ export const usersTable = pgTable('users', {
     email: varchar({length: 255}).notNull().unique(),
     password: varchar({length: 255}).notNull(),
     role: varchar({length: 255}).notNull().default('user'),
-
+    
     name: varchar({length: 255}),
     address: text(),
     
