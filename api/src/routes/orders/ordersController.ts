@@ -12,7 +12,7 @@ export async function createOrder (req: Request, res: Response) {
             res.status(400).json({ message: 'invalid order data'});
             return;
         }
-
+        // @ts-ignore
         const [newOrder] = await db.insert(ordersTable).values({ userId: userId }).returning();
 
 
