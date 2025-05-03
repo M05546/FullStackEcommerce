@@ -1,6 +1,5 @@
 import { Text } from '@/components/ui/text';
 import { useLocalSearchParams } from 'expo-router';
-import products from '@/assets/products.json';
 import { Card } from '@/components/ui/card';
 import { Image } from '@/components/ui/image';
 import { VStack } from '@/components/ui/vstack';
@@ -8,14 +7,26 @@ import { Heading } from '@/components/ui/heading';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Box } from '@/components/ui/box';
 import { Stack } from 'expo-router';
+import { useQuery } from '@tanstack/react-query';
+import { fetchProductById } from '@/api/products';
+import { ActivityIndicator } from 'react-native';
 
 export default function ProductDetailsScreen() {
     const {id} = useLocalSearchParams<{id: string}>();
 
-    const product = products.find((p) => p.id === Number(id));
+    const{data: product, isLoading, error} = useQuery({
+        queryKey: ['products', id], 
+        queryFn: () => fetchProductById(Number(id)),
+    });
 
-    if (!product) {
-        return <Text>Product not found</Text>;
+
+    if (isLoading) {
+        return <ActivityIndicator/>;
+    }
+
+
+    if (error) {
+        return <Text>Product not found !!!</Text>;
     }
 
     return(
@@ -27,7 +38,7 @@ export default function ProductDetailsScreen() {
               uri: product.image,
               }}
               className="mb-6 h-[240px] w-full rounded-md aspect-[4/3]"
-              alt={'${product.name} image'}
+              alt={`${product.name} image`}
               resizeMode="contain"
             />
             <Text className="text-sm font-normal mb-2 text-typography-700">
