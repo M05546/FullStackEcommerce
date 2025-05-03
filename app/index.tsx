@@ -23,8 +23,9 @@ if (isLoading) {
   }
 
 if (error) {
-  return <Text>Error loading products</Text>;
+  return (<Text>Error loading products</Text>);
 }
+
 
   return (
     <FlatList 
