@@ -10,12 +10,17 @@ import bcrypt from 'bcryptjs';
 import { db } from '../../db/index.js';
 import { eq } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 const router = Router();
+dotenv.config(); // Load .env file for local development
+
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-local-dev-only-please-change'; // Use a fallback for local dev if .env is missing
+
 
 const generateUserToken = (user: any) => {
-  return jwt.sign({ userId: user.id, role: user.role }, 'your-secret', {
-    expiresIn: '30d',
+  return jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, {
+    expiresIn: '1d', // Example: Shortened to 1 day
   });
 };
 
