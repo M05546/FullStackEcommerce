@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import {
   createUserSchema,
   loginSchema,
@@ -24,7 +24,7 @@ const generateUserToken = (user: any) => {
   });
 };
 
-router.post('/register', validateData(registerSchema), async (req, res) => {
+router.post('/register', validateData(registerSchema), async (req: Request, res: Response) => {
   try {
     const data = req.cleanBody;
     data.password = await bcrypt.hash(data.password, 10);
@@ -42,7 +42,7 @@ router.post('/register', validateData(registerSchema), async (req, res) => {
   }
 });
 
-router.post('/login', validateData(loginSchema), async (req, res) => {
+router.post('/login', validateData(loginSchema), async (req: Request, res: Response) => {
   try {
     const { email, password } = req.cleanBody;
 

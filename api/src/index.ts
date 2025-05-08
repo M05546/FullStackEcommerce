@@ -1,4 +1,4 @@
-import express, {json, urlencoded} from 'express';
+import express, {json, urlencoded, Request, Response} from 'express';
 import cors from 'cors';
 import productsRoutes from './routes/products/index';
 import authRoutes from './routes/auth/index';
@@ -16,7 +16,7 @@ app.use(cors({
 app.use(urlencoded({ extended:false }));
 app.use(json());
 
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
     res.send('Welcome Home !!!');
 });
 
