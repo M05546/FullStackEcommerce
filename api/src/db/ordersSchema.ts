@@ -1,24 +1,25 @@
-import { 
-    integer,
-    pgTable,
-    varchar,
-    timestamp,
-    doublePrecision
+import {
+  doublePrecision,
+  integer,
+  pgTable,
+  timestamp,
+  varchar,
 } from 'drizzle-orm/pg-core';
-import { usersTable } from './usersSchema';
-import { productsTable } from './productsSchema';
+import { usersTable } from './usersSchema.ts';
+import { productsTable } from './productsSchema.ts';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-
 
 export const ordersTable = pgTable('orders', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   createdAt: timestamp().notNull().defaultNow(),
-  status: varchar({length: 50}).notNull().default('New'),
+  status: varchar({ length: 50 }).notNull().default('New'),
 
   userId: integer()
     .references(() => usersTable.id)
-    .notNull(),  
+    .notNull(),
+
+  // stripePaymentIntentId: varchar({ length: 255 }),
 });
 
 export const orderItemsTable = pgTable('order_items', {
@@ -35,19 +36,20 @@ export const orderItemsTable = pgTable('order_items', {
 });
 
 export const insertOrderSchema = createInsertSchema(ordersTable).omit({
-  id: true as never,
+  id: true,
   userId: true,
   status: true,
   createdAt: true,
 });
 
 export const insertOrderItemSchema = createInsertSchema(orderItemsTable).omit({
-  id: true as never,
+  id: true,
   orderId: true,
+  price: true, // Client no longer needs to send price; server will fetch it from the product table
 });
 
 export const insertOrderWithItemsSchema = z.object({
-  order: createInsertSchema(ordersTable),
+  order: insertOrderSchema,
   items: z.array(insertOrderItemSchema),
 });
 
