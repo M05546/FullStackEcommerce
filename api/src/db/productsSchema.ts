@@ -15,12 +15,10 @@ export const productsTable = pgTable('products', {
   price: doublePrecision().notNull(),
 });
 
-export const createProductSchema = createInsertSchema(productsTable).omit({
-  id: true,
-});
+// createInsertSchema should automatically exclude 'id' if it's auto-generated
+export const createProductSchema = createInsertSchema(productsTable);
 
-export const updateProductSchema = createInsertSchema(productsTable)
-  .omit({
-    id: true,
-  })
-  .partial();
+// For updates, ID is usually in URL params, not the body.
+// createInsertSchema likely doesn't include 'id' as an input field.
+// .partial() makes all other fields optional for the update.
+export const updateProductSchema = createInsertSchema(productsTable).partial();

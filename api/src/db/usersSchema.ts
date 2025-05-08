@@ -16,8 +16,8 @@ export const usersTable = pgTable('users', {
     
 });
 
+// createInsertSchema should exclude 'id' as it's auto-generated. We only need to omit 'role'.
 export const createUserSchema = createInsertSchema(usersTable).omit({
-    id: true ,
     role: true,
 });
 

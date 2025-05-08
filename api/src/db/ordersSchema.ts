@@ -36,14 +36,14 @@ export const orderItemsTable = pgTable('order_items', {
 });
 
 export const insertOrderSchema = createInsertSchema(ordersTable).omit({
-  id: true,
+  // id: true, // createInsertSchema should handle auto-generated 'id'
   userId: true,
   status: true,
   createdAt: true,
 });
 
 export const insertOrderItemSchema = createInsertSchema(orderItemsTable).omit({
-  id: true,
+  // id: true, // createInsertSchema should handle auto-generated 'id' for the order item itself
   orderId: true,
   price: true, // Client no longer needs to send price; server will fetch it from the product table
 });
