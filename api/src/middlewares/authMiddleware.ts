@@ -29,9 +29,11 @@ export function verifyToken(req: Request, res: Response, next: NextFunction){
         next();
     } catch (e) {
         if (e instanceof jwt.JsonWebTokenError) {
-            return res.status(401).json({ error: 'Invalid token' });
+            res.status(401).json({ error: 'Invalid token' });
+            return; // Explicitly return void
         }
         res.status(401).json({error: 'Access denied'});
+        return; // Explicitly return void
     }
 } 
 

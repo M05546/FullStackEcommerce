@@ -22,17 +22,20 @@ export async function createOrder(req: Request, res: Response) {
     const userId = req.userId;
     if (!userId) {
       // User ID should be set by verifyToken middleware
-      return res.status(401).json({ message: 'User not authenticated.' });
+      res.status(401).json({ message: 'User not authenticated.' });
+      return;
     }
 
     if (!items || items.length === 0) {
-      return res.status(400).json({ message: 'Order must contain at least one item.' });
+      res.status(400).json({ message: 'Order must contain at least one item.' });
+      return;
     }
 
     // 1. Extract Product IDs from the request
     const productIds = items.map((item) => item.productId);
     if (productIds.some(id => typeof id !== 'number' || isNaN(id))) {
-        return res.status(400).json({ message: 'Invalid product ID format in items.' });
+        res.status(400).json({ message: 'Invalid product ID format in items.' });
+        return;
     }
 
     // 2. Fetch products and their actual prices from the database
@@ -60,12 +63,14 @@ export async function createOrder(req: Request, res: Response) {
     // Validate that all requested product IDs were found and have valid quantity
     for (const item of items) {
       if (!productPriceMap.has(item.productId)) {
-        return res.status(400).json({
+        res.status(400).json({
           message: `Product with ID ${item.productId} not found or is unavailable.`,
         });
+        return;
       }
       if (typeof item.quantity !== 'number' || item.quantity <= 0) {
-        return res.status(400).json({ message: `Invalid quantity for product ID ${item.productId}. Quantity must be a positive number.` });
+        res.status(400).json({ message: `Invalid quantity for product ID ${item.productId}. Quantity must be a positive number.` });
+        return;
       }
     }
 
@@ -92,11 +97,13 @@ export async function createOrder(req: Request, res: Response) {
     console.error('Error creating order:', e);
     // Check for specific database errors if needed, e.g., foreign key constraint
     if (e instanceof Error && (e.message.toLowerCase().includes('foreign key constraint') || e.message.toLowerCase().includes('not-null constraint'))) {
-        return res.status(400).json({ message: 'Invalid order data. Please check product IDs and quantities.' });
+        res.status(400).json({ message: 'Invalid order data. Please check product IDs and quantities.' });
+        return;
     }
     // If it's one of our thrown errors for price config
     if (e instanceof Error && e.message.startsWith('Internal error: Price configuration')) {
-        return res.status(500).json({ message: 'An internal error occurred while processing your order. Please try again later.' });
+        res.status(500).json({ message: 'An internal error occurred while processing your order. Please try again later.' });
+        return;
     }
     res.status(500).json({ message: 'Failed to create order due to an internal error.' });
   }
