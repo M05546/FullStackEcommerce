@@ -1,8 +1,8 @@
 import express, {json, urlencoded, Request, Response} from 'express';
 import cors from 'cors';
-import productsRoutes from './routes/products/index';
-import authRoutes from './routes/auth/index';
-import ordersRoutes from './routes/orders/index';
+import productsRoutes from './routes/products/index.js';
+import authRoutes from './routes/auth/index.js';
+import ordersRoutes from './routes/orders/index.js';
 
 
 const port = 3000;
