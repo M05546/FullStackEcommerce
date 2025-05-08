@@ -15,7 +15,9 @@
       "baseUrl": ".", // Allow absolute imports relative to project root
       "paths": {
         "*": ["node_modules/*"]
-      }
-    }
+      },
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist", "drizzle.config.ts", "migrate.js"]
   }
   
