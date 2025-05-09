@@ -3,7 +3,7 @@ import { Link, Stack } from "expo-router";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Icon } from "@/components/ui/icon";
-import { ShoppingCart, User } from "lucide-react-native";
+import { ShoppingCart, User, LogOut } from "lucide-react-native"; // Import LogOut icon
 import { Pressable } from "react-native";
 import { useCart } from "@/store/cartStore";
 import { Text } from "@/components/ui/text";
@@ -15,6 +15,9 @@ export default function RootLayout() {
 
     const cartItemsNum = useCart((state) => state.items.length);
     const isLoggedIn = useAuth((s) => !!s.token);
+    const logoutAction = useAuth((s) => s.logout); // Get the logout action
+    const tokenFromStore = useAuth((s) => s.token);
+
 
     return (
         <QueryClientProvider client={queryClient}>
@@ -34,13 +37,23 @@ export default function RootLayout() {
             >
                 <Stack.Screen name="index" options={{ 
                     title: "Shop",
-                    headerLeft: () => 
-                        !isLoggedIn && (
-                        <Link href={ '/login' } asChild>
-                            <Pressable className='flex-row items-center gap-2'>
-                            <Icon as={User} />
+                    headerLeft: () => (
+                        isLoggedIn ? (
+                            // If logged in, show Logout button
+                            <Pressable onPress={() => {
+                                console.log("Logout button pressed");
+                                logoutAction();
+                            }} className='flex-row items-center gap-2 ml-3'>
+                                <Icon as={LogOut} />
                             </Pressable>
-                        </Link>
+                        ) : (
+                            // If not logged in, show Login link
+                            <Link href={ '/(auth)/login' } asChild>
+                                <Pressable className='flex-row items-center gap-2'>
+                                <Icon as={User} />
+                                </Pressable>
+                            </Link>
+                        )
                     ),
                     headerTitleAlign: 'center'  
                     }} 
