@@ -6,11 +6,14 @@ import rateLimit from 'express-rate-limit'; // Import express-rate-limit
 import hpp from 'hpp'; // Import hpp
 import authRoutes from './routes/auth/index.js';
 import ordersRoutes from './routes/orders/index.js';
+import dotenv from 'dotenv'; // Import dotenv
 
+dotenv.config(); // Load environment variables from .env file
 
-const port = 3000;
+const PORT = process.env.PORT || 3000; // Use Render's port or fallback for local
 
 const app = express();
+
 
 // Rate limiter for authentication routes (login, register)
 const authLimiter = rateLimit({
@@ -29,19 +32,23 @@ const apiLimiter = rateLimit({
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
-// Add helmet for security headers
-app.use(helmet());
+// --- Middleware Order ---
+// 1. Helmet (with CSP temporarily disabled for troubleshooting Render 502 errors)
+app.use(helmet({
+    contentSecurityPolicy: false,
+}));
 
-// Protect against HTTP Parameter Pollution attacks
-app.use(hpp());
-
+// 2. CORS
 app.use(cors({
     origin: ['http://localhost:8081', 'http://192.168.1.163:8081'],
   }));
   
-app.use(urlencoded({ extended:false, limit: '500kb' })); // Example: 500KB limit
-app.use(json({ limit: '500kb' })); // Example: 500KB limit
+// 3. Body Parsers (before HPP)
+app.use(urlencoded({ extended: false, limit: '500kb' }));
+app.use(json({ limit: '500kb' }));
 
+// 4. HPP - HTTP Parameter Pollution protection (after body parsing)
+app.use(hpp());
 app.get('/', (req: Request, res: Response) => {
     res.send('Welcome Home !!!');
 });
@@ -61,6 +68,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
