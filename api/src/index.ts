@@ -44,9 +44,16 @@ const apiLimiter = rateLimit({
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
-            defaultSrc: ["'none'"], // Disallow everything by default
-            frameAncestors: ["'none'"], // Prevent clickjacking
-            objectSrc: ["'none'"], // Disallow plugins like Flash, Java
+            defaultSrc: ["'none'"],    // Default for all if not specified
+            scriptSrc: ["'none'"],     // No scripts from any source
+            styleSrc: ["'none'"],      // No styles from any source
+            imgSrc: ["'none'"],        // No images
+            connectSrc: ["'none'"],    // No connections (adjust if API needs to call other services)
+            fontSrc: ["'none'"],       // No fonts
+            objectSrc: ["'none'"],     // No plugins (Flash, Java)
+            mediaSrc: ["'none'"],      // No audio/video
+            frameSrc: ["'none'"],      // No iframes (deprecated, use frame-ancestors)
+            frameAncestors: ["'none'"],// Prevent clickjacking
         }
     }
 }));
