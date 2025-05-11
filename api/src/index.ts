@@ -33,9 +33,18 @@ const apiLimiter = rateLimit({
 });
 
 // --- Middleware Order ---
-// 1. Helmet (with CSP temporarily disabled for troubleshooting Render 502 errors)
+// 1. Helmet
+// Re-enable CSP with a restrictive policy suitable for an API.
+// This policy disallows loading any external resources, scripts, styles, frames, etc.,
+// which is generally safe and recommended for APIs that only serve data.
 app.use(helmet({
-    contentSecurityPolicy: false,
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'none'"], // Disallow everything by default
+            frameAncestors: ["'none'"], // Prevent clickjacking
+            objectSrc: ["'none'"], // Disallow plugins like Flash, Java
+        }
+    }
 }));
 
 // 2. CORS
