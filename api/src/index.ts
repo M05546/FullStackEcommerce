@@ -14,6 +14,10 @@ const PORT = process.env.PORT || 3000; // Use Render's port or fallback for loca
 
 const app = express();
 
+// Trust the first proxy (Render's load balancer)
+// This is important for express-rate-limit to correctly identify client IPs
+// and for other features that rely on req.ip reflecting the true client IP.
+app.set('trust proxy', 1); 
 
 // Rate limiter for authentication routes (login, register)
 const authLimiter = rateLimit({
