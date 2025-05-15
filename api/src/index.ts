@@ -74,9 +74,9 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 
-app.use('/products', apiLimiter, productsRoutes); // Apply general limiter to products
-app.use('/auth', authLimiter, authRoutes);       // Apply stricter limiter to auth
-app.use('/orders', apiLimiter, ordersRoutes);    // Apply general limiter to orders
+app.use('/products', productsRoutes); // Apply general limiter to products
+app.use('/auth', authRoutes);       // Apply stricter limiter to auth
+app.use('/orders', ordersRoutes);    // Apply general limiter to orders
 
 
 // Global error handler - should be the last middleware
